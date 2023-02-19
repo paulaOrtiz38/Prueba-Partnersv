@@ -1,0 +1,117 @@
+<div class="profile-page sidebar-collapse">
+<app-navbar></app-navbar>
+</div>
+
+<div class="container pt-5">
+    <div class="row">
+        <div class="ml-3 mb-2">
+            <button class="btn btn-primary btn-md" type="button" (click)="modal(templateEnviaReaccion)">
+              <i class="fa fa-plus"></i>
+              Agregar</button>
+          </div>
+ 
+        <div class="table-responsive mt-4" >
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Abonado</th>
+                    <th scope="col">Evento</th>
+                    <th scope="col">Codigo Evento</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Num_solicitud</th>
+                    <th scope="col">CC_Motorizado</th>
+                    <th scope="col">Opcion</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor=" let reaccion of reaccionesRegistros | paginate:{itemsPerPage:porpage,currentPage:page} ">
+                    <th scope="row">{{reaccion.id}}</th>
+                    <td>{{reaccion.abonado.nombre}}</td>
+                    <td>{{reaccion.evento}}</td>
+                    <td>{{reaccion.evento_codigo}}</td>
+                    <td>{{reaccion.estado_reaccion}}</td>
+                    <td>{{reaccion.fecha}}</td>
+                    <td>{{reaccion.hora}}</td>
+                    <td>{{reaccion.num_solicitud}}</td>
+                    <td>{{reaccion.cc_motorizado}}</td>
+                    <td><button type="button" class="btn btn-secondary btn-sm" (click)="modal(templateVerReaccion,reaccion)">Ver</button> </td>
+                </tr>
+            
+                </tbody>
+            </table>
+             <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
+
+        </div>
+    </div>
+</div>
+
+ <!-- Modal -->
+ <ng-template #templateVerReaccion let-modal>
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Seguimiento Reacción</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"  (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body">
+        <h3>Solicitud: {{reaccionRegistro.num_solicitud}}</h3>
+       
+        <div id="map"></div>
+        <h2>Datos</h2>
+        <div class="col">
+            <label><strong>Evento</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.evento}}
+            <br>
+            <label><strong>Codigo</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.evento_codigo}}
+            <br>
+            <label><strong>Descripción</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.evento_descripcion}}
+            <br>
+            <label><strong>Fecha</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.fecha}}
+            <br>
+            <label><strong>Hora</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.hora}}
+            <br>
+            <label><strong>Estado</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.estado_reaccion}}
+            <br>
+            <label><strong>CC Motorizado</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.cc_motorizado}}
+            <br>
+            <label><strong>Abonado</strong>:&nbsp;&nbsp;</label>{{reaccionRegistro.abonado.nombre}}
+        </div>
+        <div class="d-flex justify-content-center pt-5 px-4">
+            <button class="btn btn-secondary md" type="button" (click)="cerrarModal()">Cancelar</button>
+         </div>
+    </div>
+</ng-template>
+<!-- fin modal -->
+  <!-- Modal -->
+  <ng-template #templateEnviaReaccion let-modal>
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Enviar Reacción</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"  (click)="cerrarModal()"></button>
+    </div>
+    
+    <div class="modal-body">
+        <form #enviarEstadoReaccion="ngForm" (ngSubmit)="onSubmit(enviarEstadoReaccion)">
+            <span class="badge bg-danger" *ngIf="msjError">Todos los campos son obligatorios!!</span>
+
+            <div class="form-group pb-3">
+                <label for="abonado"  class="form-control-label">Abonado*</label>
+                <ng-select [(ngModel)]="reaccionRegistro.abonado_id" name="abonado_id">
+                    <ng-option *ngFor="let abonado of lstAbonados" [value]="abonado.id">{{abonado.nombre}}</ng-option>
+                </ng-select>
+            </div>
+
+            <div class="form-group">
+                <label for="evento"  class="form-control-label" >Evento *</label>
+                <ng-select [(ngModel)]="reaccionRegistro.evento" name="evento" (change)="datosEvento($event)" required>
+                    <ng-option *ngFor="let evento of eventosControl" [value]="evento" >{{evento.codigo_evento+' | '+evento.nombre +' | '+ evento.descripcion}}</ng-option>
+                </ng-select>               
+            </div>
+
+        <div class="d-flex justify-content-center pt-5 px-4">
+            <button class="btn btn-primary md mr-1" type="submit">Enviar Reacción</button> &nbsp;
+            <button class="btn btn-secondary md" type="button" (click)="cerrarModal()">Cancelar</button>
+         </div>
+      </form>
+    </div>
+  </ng-template>
+

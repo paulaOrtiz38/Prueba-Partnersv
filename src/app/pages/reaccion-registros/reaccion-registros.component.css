@@ -1,0 +1,10 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+table {
+    width: 90%;
+  }
+
+  #map { height: 400px; }
+  
+
+  

@@ -1,0 +1,83 @@
+
+<div class="profile-page sidebar-collapse">
+    <app-navbar></app-navbar>
+</div>
+<div class="container pt-5">
+    <div class="row">
+        
+        <form #buscarLoginUsuario="ngForm" (ngSubmit)="onSubmit(buscarLoginUsuario)">
+            <div class="form-row">
+                <div class="form-group col-md-6">                            
+                    <input type="text" name="nombre" minlength="4" [(ngModel)]="nombre" class="form-control" placeholder="Nombre" required="">
+                </div>
+            </div>
+            <button class="btn btn-primary btn-md mt-3" type="submit">
+                <fa-icon [icon]="faSearch"></fa-icon> Buscar
+            </button>
+        </form>
+        <div class="table-responsive mt-4" >
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">login</th>
+                    <th scope="col">avatar</th> 
+                    <th scope="col"></th>                      
+                </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor=" let usuario of usuarios | paginate:{itemsPerPage:porpage,currentPage:page} ">
+                    <th scope="row">{{usuario.id}}</th>
+                    <td>{{usuario.login}}</td>
+                    <td>{{usuario.avatar_url}}</td>                      
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="modal(templateVerUsuario,usuario.url)">Ver</button> 
+                        <button type="button" class="btn btn-success btn-sm m-2" (click)="goToUser(usuario)">Detalle</button> 
+                    </td>
+                </tr>
+            
+                </tbody>
+            </table>
+                <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
+
+        </div>
+    </div>
+</div>
+
+    <!-- Modal -->
+<ng-template #templateVerUsuario let-modal>
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Seguimiento Reacción</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"  (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body">
+        <h3>Solicitud: </h3>
+        
+        <div id="map"></div>
+        <h2>Datos</h2>
+        <div class="col">
+            <label><strong>Evento</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Codigo</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Descripción</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Fecha</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Hora</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Estado</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>CC Motorizado</strong>:&nbsp;&nbsp;</label>
+            <br>
+            <label><strong>Abonado</strong>:&nbsp;&nbsp;</label>
+        </div>
+        <div class="d-flex justify-content-center pt-5 px-4">
+            <button class="btn btn-secondary md" type="button" (click)="cerrarModal()">Cancelar</button>
+            </div>
+    </div>
+</ng-template>
+<!-- fin modal -->
+<router-outlet></router-outlet>
+    
+    
