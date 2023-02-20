@@ -17,7 +17,7 @@ export class ScoreGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const score = route.queryParams['score'];
-       if (Number(score) >= 3) {
+       if (Number(score) >= 1) {
         return true;
       } else {
         // Redirige al usuario a otra página si su puntaje es menor a 30.0

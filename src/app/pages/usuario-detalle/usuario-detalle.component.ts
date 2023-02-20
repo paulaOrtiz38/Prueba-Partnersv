@@ -32,7 +32,7 @@ export class UsuarioDetalleComponent implements OnInit {
     );
     this._servicioUsuario.getUsuario(this.userLogin).pipe()
     .subscribe(resp => {
-      console.info(resp);
+      //console.info(resp);
           this.usuario = resp;
     });
 

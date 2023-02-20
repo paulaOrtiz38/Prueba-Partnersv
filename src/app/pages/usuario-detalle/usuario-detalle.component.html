@@ -6,15 +6,24 @@
     <div class="row">
         <div class="col-md-12 pb-2">            
             <button type="button" class="btn btn-secondary btn-sm" (click)="regresar()">
-                <fa-icon [icon]="faArrow"></fa-icon>
-                Volver</button>
-        </div>
-        <figure class="figure">
-            <img [src]="usuario.avatar_url"  class="img-thumbnail rounded" alt="imagen">
-            <figcaption class="figure-caption text-right">{{usuario.login}}</figcaption>
-        </figure>
-        <span><label style="font-weight: bold;">Seguidores: </label> {{usuario.followers}}</span>
-        <span><label style="font-weight: bold;">Siguiendo: </label> {{usuario.following}}</span>
+                <fa-icon [icon]="faArrow"></fa-icon>Volver</button>
+         </div>
 
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col mb-4">
+               <div class="card">
+                    <img [src]="usuario.avatar_url"  class="img-thumbnail rounded" alt="imagen">
+                    <div class="card-body">
+                    <h5 class="card-title">{{usuario.login}}</h5>
+                    <p class="card-text pt-3">
+                        <span><label style="font-weight: bold;">Seguidores: </label> {{usuario.followers}}</span>
+                        <br>
+                        <span><label style="font-weight: bold;">Siguiendo: </label> {{usuario.following}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+

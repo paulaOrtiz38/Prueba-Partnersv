@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { finalize, firstValueFrom } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioModel } from 'src/app/models/usuario.model';
@@ -7,13 +8,21 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+import * as Highcharts from 'highcharts';
+import HighchartsMore from 'highcharts/highcharts-more';
+import HighchartsSolidGauge from 'highcharts/modules/solid-gauge';
+import { ChartOptions } from 'highcharts';
+
+HighchartsMore(Highcharts);
+HighchartsSolidGauge(Highcharts);
+
 const VETADO = 'DOUBLEVPARTNERS';//“doublevpartners”.
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit,AfterViewInit {
 
   faSearch = faSearch;
   public page:    number = 1;
@@ -23,8 +32,11 @@ export class UsuariosComponent implements OnInit {
   public textoError:string;
   public usuarios:UsuarioModel[] = [];
   public usuario = new UsuarioModel();
-
+  public numSeg:boolean  = true;
   public nombre:string;
+
+  Highcharts = Highcharts;
+  chartOptions={};
   
   constructor(private _modal: NgbModal,
               private readonly router: Router,
@@ -33,21 +45,30 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsuarios();
-    this.nombre ="";
+    this.nombre =""; 
+  }
+
+
+  ngAfterViewInit(): void {
+      setTimeout(()=>{
+        this.barras();
+      },1500) 
   }
 
   public getUsuarios(){
-     this._servicioUsuario.getUsuarios().subscribe({
-        next:(resp:any)=>{
-          this.usuarios = resp.items;
+     this._servicioUsuario.getUsuarios()
+     .subscribe({
+        next:(resp:any)=>{         
+          this.usuarios = resp;
         },error:(e)=>{         
            console.log(e);
-        },complete(){},
+        },complete(){
+        },
       });
   }
 
   public modal(content: any,url?: string):void{
-    
+  
     if(url){      
       this._modal.open(content, {
         backdrop: 'static',
@@ -101,6 +122,7 @@ export class UsuariosComponent implements OnInit {
   async buscarUsuarios(){
    let res = await this.enviaSolicitudBusqueda();
    if(!res) this.usuarios = [];
+   this.barras();
    return;
   }
 
@@ -110,7 +132,7 @@ export class UsuariosComponent implements OnInit {
       this._servicioUsuario.buscarUsuarios(this.nombre).pipe()
         .subscribe(resp => {
           
-          if (resp) {           
+          if (resp) {          
             this.usuarios = resp.items.slice(0, 10);
             resolve(true);
           } else {
@@ -125,6 +147,36 @@ export class UsuariosComponent implements OnInit {
 
   public cerrarModal(){    
     this._modal.dismissAll();
+  }
+
+  private barras() {
+    if(this.usuarios && this.usuarios.length > 0) {
+      let logins = this.usuarios.map((d) => d.login);
+      let seguidores = this.usuarios.map((d) => d.followers);
+       return this.chartOptions = Highcharts.chart('chart-column2' as any, {
+          chart: {
+            type: 'column',
+          },
+          title: {
+            text: 'Número de seguidores por usuario',
+          },
+          xAxis: {
+            categories: logins,
+          },
+          yAxis: {
+            title: {
+              text: 'Número de seguidores',
+            },
+          },
+          series: [
+            {
+              name: 'Seguidores',
+              data: seguidores,
+            },
+          ],
+        } as any);
+    }
+
   }
 
 }

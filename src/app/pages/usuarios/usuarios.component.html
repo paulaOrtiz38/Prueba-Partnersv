@@ -29,9 +29,11 @@
                     <tr *ngFor=" let usuario of usuarios | paginate:{itemsPerPage:porpage,currentPage:page} ">
                     <th scope="row">{{usuario.id}}</th>
                     <td>{{usuario.login}}</td>
-                    <td>{{usuario.avatar_url}}</td>                      
                     <td>
-                        <button type="button" class="btn btn-secondary btn-sm" (click)="modal(templateVerUsuario,usuario.url)">Ver</button> 
+                        <img [src]="usuario.avatar_url" alt="..." class="img-fluid img-thumbnail" width="200" height="200">
+                    </td>                      
+                    <td>
+                        <!-- <button type="button" class="btn btn-secondary btn-sm" (click)="modal(templateVerUsuario,usuario.url)">Ver</button>  -->
                         <button type="button" class="btn btn-success btn-sm m-2" (click)="goToUser(usuario)">Detalle</button> 
                     </td>
                 </tr>
@@ -41,7 +43,16 @@
                 <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
 
         </div>
+
     </div>
+
+    <div class="col-6">
+        <div id="chart-column"></div>
+      </div>
+
+      <div class="col-6">
+        <div id="chart-column2"></div>
+      </div>
 </div>
 
     <!-- Modal -->

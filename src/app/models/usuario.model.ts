@@ -8,7 +8,7 @@ export class UsuarioModel {
     followers        :string;
     type             :string;
     following_url    :string;
-    following    :string;
+    following       :string;
     score            :string;
 }
 
